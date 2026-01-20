@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "399727429160",
+    "project_id": "referral-system-cdbe9",
+    "storage_bucket": "referral-system-cdbe9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:399727429160:android:7b84ec664bffcf8889971d",
+        "android_client_info": {
+          "package_name": "com.example.referral_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBek_1uByDIi3m_uOPjDFE2x3wwbNM4CW0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
