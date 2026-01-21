@@ -11,71 +11,31 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-
-  bool isLoading = false;
+  bool loading = false;
 
   Future<void> login() async {
-    final email = emailController.text.trim();
-    final password = passwordController.text.trim();
-
-    if (email.isEmpty || password.isEmpty) {
+    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text("Fill all fields")));
       return;
     }
 
-    setState(() => isLoading = true);
+    setState(() => loading = true);
 
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
       );
-
-      if (!mounted) return;
       Navigator.pushReplacementNamed(context, '/dashboard');
-    } on FirebaseAuthException catch (e) {
-      String message = "Login failed";
-
-      switch (e.code) {
-        case 'user-not-found':
-          message = "User not found";
-          break;
-        case 'wrong-password':
-          message = "Wrong password";
-          break;
-        case 'invalid-email':
-          message = "Invalid email format";
-          break;
-        case 'user-disabled':
-          message = "User account disabled";
-          break;
-      }
-
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(message)));
-      }
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text("Error: $e")));
-      }
-    } finally {
-      if (mounted) {
-        setState(() => isLoading = false);
-      }
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(e.toString())));
     }
-  }
 
-  @override
-  void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    super.dispose();
+    setState(() => loading = false);
   }
 
   @override
@@ -89,9 +49,8 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             TextField(
               controller: emailController,
-              keyboardType: TextInputType.emailAddress,
               decoration: const InputDecoration(
-                hintText: "Email",
+                labelText: "Email",
                 border: OutlineInputBorder(),
               ),
             ),
@@ -100,12 +59,12 @@ class _LoginScreenState extends State<LoginScreen> {
               controller: passwordController,
               obscureText: true,
               decoration: const InputDecoration(
-                hintText: "Password",
+                labelText: "Password",
                 border: OutlineInputBorder(),
               ),
             ),
-            const SizedBox(height: 24),
-            isLoading
+            const SizedBox(height: 20),
+            loading
                 ? const CircularProgressIndicator()
                 : SizedBox(
                     width: double.infinity,
@@ -115,9 +74,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
             TextButton(
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, '/signup');
-              },
+              onPressed: () =>
+                  Navigator.pushReplacementNamed(context, '/signup'),
               child: const Text("Create Account"),
             ),
           ],
